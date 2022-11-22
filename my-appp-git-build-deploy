@@ -1,0 +1,27 @@
+pipeline{
+    agent any
+    stages{
+        stage('clone'){
+            steps{
+                git credentialsId: 'clone', url: 'https://github.com/damodhar155/my-appp.git'
+            }
+        }
+        stage('build'){
+            steps{
+                sh "mvn clean package"
+            }
+        }
+        stage('deploy'){
+            steps{
+                sshagent(['tomcat']) {
+                    sh "scp -o StrictHostKeyChecking=no target/*.war ec2-user@172.31.44.60:/home/ec2-user/apache-tomcat-9.0.69/webapps"
+                }
+            }
+        }
+        stage('nexus'){
+            steps{
+                nexusArtifactUploader artifacts: [[artifactId: 'myweb', classifier: '', file: 'target/myweb-0.0.7.war', type: 'war']], credentialsId: 'nexus1', groupId: 'nexus1', nexusUrl: '172.31.32.42:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'sample-releases', version: '8.2.0'
+                }
+            }
+        }
+    }
