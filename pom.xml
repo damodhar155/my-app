@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>gitid</groupId>
-	<artifactId>my-appp</artifactId>
+	<groupId>in.javahome2</groupId>
+	<artifactId>myweb</artifactId>
 	<packaging>war</packaging>
 	<version>0.0.7</version>
-	<name>my-appp</name>
+	<name>my-app</name>
 	<url>http://maven.apache.org</url>
 	
 	<properties>
@@ -39,12 +39,12 @@
 	</dependencies>
 	<distributionManagement>
 		 <snapshotRepository>
-		    <id>nexusid</id>
+		    <id>nexus</id>
 		    <url>http://172.31.22.73:8081/repository/maven-snapshots/</url>
 		 </snapshotRepository>
 		
 		<repository>
-		    <id>nexusid</id>
+		    <id>nexus</id>
 		    <url>http://172.31.22.73:8081/repository/sample-releases/</url>
 		</repository>
   	</distributionManagement>
