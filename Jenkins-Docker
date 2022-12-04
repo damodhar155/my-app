@@ -1,0 +1,38 @@
+pipeline{
+    agent any
+    tools {
+        maven 'Maven-3.6.1'
+    }
+    stages{
+        stage ('gitclone'){
+            steps{
+                git credentialsId: 'javahome2', url: 'https://github.com/damodhar155/my-appp.git'
+            }
+        }
+        stage ('maven-build'){
+            steps{
+                sh "mvn clean sonar:sonar package"
+            }
+        }
+        stage ('nexus-backup'){
+            steps{
+                nexusArtifactUploader artifacts: [[artifactId: 'my-appp', classifier: '', file: 'target/myweb-0.0.7.war', type: 'war']], credentialsId: 'nexus33', groupId: 'nexus.3', nexusUrl: '18.179.222.229:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'maven-releasess', version: '0.0.7'
+            }
+        }
+        stage ('Build Docker Image'){
+            steps{
+                sh 'docker build -t damodhar155/myapp .'
+                 sh 'docker build -t tomcat:${BUILD_NUMBER} .'
+                 sh 'docker run -itd --name damu37 -p 6060:8080 tomcat:${BUILD_NUMBER}'
+            }
+        }
+        stage ('docker-deploy'){
+            steps{
+                withCredentials([string(credentialsId: 'DOCKER_HUB_CREDENTIALS1', variable: 'DOCKER_HUB_CREDENTIALS1')]) {
+                sh "docker login -u damodhar155 -p ${DOCKER_HUB_CREDENTIALS1}"
+                }
+                sh 'docker push damodhar155/myapp'
+            }
+        }
+    }
+}
